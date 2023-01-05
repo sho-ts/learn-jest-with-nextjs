@@ -35,24 +35,28 @@ describe('Hello', () => {
 
       const button = getByText('Click Me');
 
-      await waitFor(async () => {
-        await user.click(button);
-      });
+      await user.click(button);
 
-      expect(push).toHaveBeenCalledWith('/');
+      await waitFor(async () => {
+        expect(push).toHaveBeenCalledWith('/');
+      });
     });
 
     it('failure handleSubmit', async () => {
       const user = userEvent.setup();
-      const { getByText } = render(<Hello e />, { wrapper });
+      const { getByText } = render(<Hello e />, {
+        wrapper,
+      });
 
       const button = getByText('Click Me');
 
-      await waitFor(async () => {
-        await user.click(button);
-      });
+      await user.click(button);
 
-      expect(window.alert).toHaveBeenCalledWith('test-error');
-    })
+      await waitFor(async () => {
+        expect(window.alert).toHaveBeenCalledWith(
+          'test-error'
+        );
+      });
+    });
   });
 });
