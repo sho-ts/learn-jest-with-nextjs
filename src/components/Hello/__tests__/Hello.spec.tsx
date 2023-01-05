@@ -22,13 +22,14 @@ const wrapper: React.FC<{ children: React.ReactNode }> = ({
 describe('Hello', () => {
   describe('router', () => {
     const push = jest.fn();
-    const useRouter = jest.spyOn(
-      require('next/router'),
-      'useRouter'
-    );
-    useRouter.mockReturnValue({ push });
 
-    it('handleSubmit', async () => {
+    jest
+      .spyOn(require('next/router'), 'useRouter')
+      .mockReturnValue({ push });
+
+    window.alert = jest.fn();
+
+    it('success handleSubmit', async () => {
       const user = userEvent.setup();
       const { getByText } = render(<Hello />, { wrapper });
 
@@ -40,5 +41,18 @@ describe('Hello', () => {
 
       expect(push).toHaveBeenCalledWith('/');
     });
+
+    it('failure handleSubmit', async () => {
+      const user = userEvent.setup();
+      const { getByText } = render(<Hello e />, { wrapper });
+
+      const button = getByText('Click Me');
+
+      await waitFor(async () => {
+        await user.click(button);
+      });
+
+      expect(window.alert).toHaveBeenCalledWith('test-error');
+    })
   });
 });

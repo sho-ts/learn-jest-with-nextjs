@@ -1,15 +1,20 @@
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
-const Hello = () => {
+type Props = {
+  e?: boolean;
+};
+
+const Hello: React.FC<Props> = ({ e }) => {
   const router = useRouter();
 
   const { mutate } = useMutation<unknown, Error, null>({
     mutationFn: async () => {
-      return {}
-    },
-    onError: () => {
-      alert('error');
+      if (e) {
+        throw new Error();
+      }
+
+      return {};
     },
   });
 
@@ -17,6 +22,9 @@ const Hello = () => {
     mutate(null, {
       onSuccess: () => {
         router.push('/');
+      },
+      onError: () => {
+        alert('test-error');
       },
     });
   };
